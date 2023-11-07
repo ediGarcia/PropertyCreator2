@@ -1,0 +1,491 @@
+﻿<UserControl x:Class="PropertyCreator2.Controls.PropertyDataEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:models="clr-namespace:PropertyCreator2.Models"
+             xmlns:controls="clr-namespace:PropertyCreator2.Controls"
+             xmlns:converters="clr-namespace:PropertyCreator2.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="500"
+             Loaded="PropertyDataEditor_Loaded">
+    <Grid
+        DataContext="{Binding PropertyData, RelativeSource={RelativeSource AncestorType=controls:PropertyDataEditor}}">
+        <Grid.Resources>
+            <Style
+                TargetType="StackPanel">
+                <Setter
+                    Property="Orientation"
+                    Value="Vertical" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="Auto"/>
+            <RowDefinition
+                Height="Auto"/>
+            <RowDefinition
+                Height="Auto"/>
+            <RowDefinition
+                Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="10"/>
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="10"/>
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="10"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0">
+                <TextBlock
+                    Text="Access modifier:" />
+                <ComboBox
+                    x:Name="CmbAccessModifier"
+                    DisplayMemberPath="Text"
+                    SelectedValue="{Binding AccessModifier}"
+                    SelectedValuePath="Value"/>
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="2">
+                <TextBlock
+                    Text="Type*:" />
+                <ComboBox
+                    x:Name="CmbType"
+                    IsEditable="True"
+                    Text="{Binding Type}"/>
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="4">
+                <TextBlock
+                    Text="Name*:" />
+                <TextBox
+                    VerticalAlignment="Stretch"
+                    Height="22"
+                    Text="{Binding Name}"/>
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="6">
+                <TextBlock
+                    Text="Default Value:" />
+                <TextBox
+                    x:Name="TxbDefaultValue"
+                    Text="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid
+            Grid.Row="1"
+            Margin="0, 10">
+            <Grid.Resources>
+                <converters:StringLengthToBooleanConverter
+                    x:Key="StringLengthToBooleanConverter" />
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="10"/>
+                <ColumnDefinition
+                    Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0">
+                <TextBlock
+                    Text="Description:" />
+                <TextBox
+                    x:Name="TxbDescription"
+                    Text="{Binding Description}"/>
+            </StackPanel>
+
+            <CheckBox
+                Grid.Column="2"
+                Content="Use attribute"
+                IsChecked="{Binding UseDescriptionAttribute}"
+                IsEnabled="{Binding Text, ElementName=TxbDescription, Converter={StaticResource StringLengthToBooleanConverter}}" />
+        </Grid>
+
+        <Grid
+            Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="10"/>
+                <ColumnDefinition />
+                <ColumnDefinition
+                    Width="10"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0">
+                <TextBlock
+                    Text="Getter:" />
+                <ComboBox
+                    x:Name="CmbGetter"
+                    DisplayMemberPath="Text"
+                    SelectedValue="{Binding GetStatus}"
+                    SelectedValuePath="Value"/>
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="2">
+                <TextBlock
+                    Text="Setter:" />
+                <ComboBox
+                    x:Name="CmbSetter"
+                    DisplayMemberPath="Text"
+                    SelectedValue="{Binding SetStatus}"
+                    SelectedValuePath="Value"/>
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="4">
+                <TextBlock
+                    Text="Category:" />
+                <ComboBox
+                    IsEditable="True"
+                    Text="{Binding Category}">
+                    <ComboBoxItem>None</ComboBoxItem>
+                    <ComboBoxItem>Appearance</ComboBoxItem>
+                    <ComboBoxItem>Automation</ComboBoxItem>
+                    <ComboBoxItem>Behavior</ComboBoxItem>
+                    <ComboBoxItem>Brush</ComboBoxItem>
+                    <ComboBoxItem>Common</ComboBoxItem>
+                    <ComboBoxItem>Layout</ComboBoxItem>
+                    <ComboBoxItem>Miscellaneous</ComboBoxItem>
+                    <ComboBoxItem>Text</ComboBoxItem>
+                    <ComboBoxItem>Transform</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <ContentPresenter
+            Grid.Row="3"
+            Content="{Binding }"
+            Margin="0, 10, 0, 0">
+            <ContentPresenter.Resources>
+                <Style
+                    TargetType="StackPanel">
+                    <Setter
+                        Property="Orientation"
+                        Value="Vertical" />
+                </Style>
+                <DataTemplate
+                    DataType="{x:Type models:SimplePropertyData}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto" />
+                            <ColumnDefinition
+                                Width="10" />
+                            <ColumnDefinition
+                                Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox
+                            x:Name="CbxUsePrivateVariable"
+                            Grid.Column="0"
+                            Content="Use private variable"
+                            IsChecked="{Binding UsePrivateVariable}"/>
+
+                        <CheckBox
+                            Grid.Column="2"
+                            Content="Notify changes"
+                            IsChecked="{Binding NotifyChanges}"
+                            IsEnabled="{Binding IsChecked, ElementName=CbxUsePrivateVariable}" />
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate
+                    DataType="{x:Type models:DependencyPropertyData}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition
+                                Width="10" />
+                            <ColumnDefinition />
+                            <ColumnDefinition
+                                Width="10" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Grid.Column="0">
+                            <TextBlock
+                                Text="Owner Type:" />
+                            <TextBox
+                                Text="{Binding OwnerType}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Column="2">
+                            <StackPanel.Style>
+                                <Style
+                                    TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=TxbDefaultValue}"
+                                            Value="">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="bool">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Boolean">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="byte">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Byte">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="char">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Char">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="double">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Double">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Int16">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="short">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Int32">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="int">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Int64">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="long">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="object">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Object">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="sbyte">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="SByte">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="float">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="Single">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="string">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="String">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="UInt16">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="ushort">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="UInt32">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="uint">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="UInt64">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=CmbType}"
+                                            Value="ulong">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock
+                                x:Name="TxbAttributeType"
+                                Text="[DefaultValueAttribute] Type:" />
+                            <TextBox
+                                Text="{Binding AttributeDefaultValueType}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Column="4">
+                            <StackPanel.Style>
+                                <Style
+                                    TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=TxbDefaultValue}"
+                                            Value="">
+                                            <Setter
+                                                Property="IsEnabled"
+                                                Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock
+                                Text="[DefaultValueAttribute] Value:" />
+                            <TextBox
+                                Text="{Binding AttributeDefaultValue}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+    </Grid>
+</UserControl>

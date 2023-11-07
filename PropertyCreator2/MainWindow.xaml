@@ -1,0 +1,195 @@
+﻿<Window x:Class="PropertyCreator2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PropertyCreator2"
+        xmlns:controls="clr-namespace:PropertyCreator2.Controls"
+        xmlns:models="clr-namespace:PropertyCreator2.Models"
+        mc:Ignorable="d"
+        Title="Property Creator 2" Height="450" Width="800"
+        Icon="hashtag.ico">
+    <Grid
+        DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+        Margin="10">
+        <Grid.Resources>
+            <Style
+                TargetType="controls:CustomPopup">
+                <Setter
+                    Property="Grid.Row"
+                    Value="0" />
+                <Setter
+                    Property="Grid.RowSpan"
+                    Value="2" />
+                <Setter
+                    Property="Margin"
+                    Value="-10" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition
+                Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListBox
+            x:Name="LsvProperties"
+            Grid.Row="0"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{Binding Settings.Properties}">
+            <ListBox.ItemTemplate>
+                <DataTemplate
+                    DataType="{x:Type models:PropertyData}">
+                    <controls:PropertyViewer
+                        HorizontalAlignment="Stretch"
+                        MouseOverBrush="#00FAFAFA"
+                        PropertyData="{Binding }"
+                        DeleteButtonClicked="PropertyViewer_OnRemoveButtonClicked"
+                        EditButtonClicked="PropertyViewer_OnEditButtonClicked" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            Margin="0, 10, 0, 0"
+            Orientation="Horizontal">
+            <Button
+                Content="Add Property"
+                Click="BtnAddProperty_OnClick" />
+            <Button
+                Content="Add Dependency Property"
+                Margin="10, 0"
+                Click="BtnAddDependencyProperty_OnClick" />
+            <Button
+                Content="Generate"
+                FontSize="15"
+                FontWeight="Bold"
+                Click="BtnGenerate_OnClick">
+                <Button.Style>
+                    <Style
+                        TargetType="Button"
+                        BasedOn="{StaticResource {x:Type Button}}">
+                        <Style.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Items.Count, ElementName=LsvProperties}"
+                                Value="0">
+                                <Setter
+                                    Property="IsEnabled"
+                                    Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
+
+        <Button
+            Grid.Row="1"
+            Content="Remove All"
+            HorizontalAlignment="Left"
+            Margin="0, 10, 0, 0"
+            Click="BtnRemoveAll_OnClick">
+            <Button.Style>
+                <Style
+                    TargetType="Button"
+                    BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding Items.Count, ElementName=LsvProperties}"
+                            Value="0">
+                            <Setter
+                                Property="Visibility"
+                                Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
+        <controls:CustomPopup
+            x:Name="PopPopup"
+            HorizontalAlignment="Stretch"
+            PopupConfirmed="PopPopup_OnPopupConfirmed"
+            PopupCancelled="PopPopup_OnPopupCancelled">
+            <controls:PropertyDataEditor />
+        </controls:CustomPopup>
+
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
+        <controls:CustomPopup
+            x:Name="PopWarningPopup"
+            IsCancelButtonVisible="False"
+            Title="Missing fields">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Path
+                    Grid.Column="0"
+                    Data="M24,4L2,42H46M24,12L39.06,38H8.94M22,20V28H26V20M22,32V36H26V32"
+                    Fill="DarkOrange" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="10, 0, 0, 0"
+                    Text="The Type and Name fields are mandatory." />
+            </Grid>
+        </controls:CustomPopup>
+
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
+        <controls:CustomPopup
+            x:Name="PopDelete"
+            Title="Removing property"
+            PopupCancelled="PopDelete_OnPopupCancelled"
+            PopupConfirmed="PopDelete_OnPopupConfirmed">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Path
+                    Grid.Column="0"
+                    Data="M8 38V14H32V38C32 40.2 30.2 42 28 42H12C9.8 42 8 40.2 8 38M12 18V38H28V18H12M27 8H34V12H6V8H13L15 6H25L27 8M38 34V30H42V34H38M38 26V14H42V26H38Z"
+                    Fill="DarkOrange"/>
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="10, 0, 0, 0"
+                    Text="The property will be deleted."/>
+            </Grid>
+        </controls:CustomPopup>
+
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
+        <controls:CustomPopup
+            x:Name="PopDeleteAll"
+            Title="Removing every property"
+            PopupConfirmed="PopDeleteAll_OnPopupConfirmed">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Path
+                    Grid.Column="0"
+                    Data="M24,4L2,42H46M24,12L39.06,38H8.94M22,20V28H26V20M22,32V36H26V32"
+                    Fill="DarkOrange" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="10, 0, 0, 0"
+                    Text="Every existing property will be permanently removed." />
+            </Grid>
+        </controls:CustomPopup>
+
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
+        <controls:CustomPopup
+            x:Name="PopResult"
+            HorizontalAlignment="Stretch"
+            IsCancelButtonVisible="False"
+            Title="Generated Results">
+            <TextBox
+                FontFamily="Cascadia Mono"
+                FontSize="13"
+                VerticalScrollBarVisibility="Auto" />
+        </controls:CustomPopup>
+    </Grid>
+</Window>

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>hashtag.ico</ApplicationIcon>
+    <AssemblyName>Property Creator 2</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="hashtag.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="hashtag.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HelperExtensions">
+      <HintPath>..\..\..\..\Dropbox\Projects\DLL\HelperExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="HelperMethods">
+      <HintPath>..\..\..\..\Dropbox\Projects\DLL\HelperMethods.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
