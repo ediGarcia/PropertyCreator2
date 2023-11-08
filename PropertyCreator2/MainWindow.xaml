@@ -189,6 +189,7 @@
             <TextBox
                 FontFamily="Cascadia Mono"
                 FontSize="13"
+                HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto" />
         </controls:CustomPopup>
     </Grid>
