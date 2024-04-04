@@ -634,17 +634,26 @@
                 ToolTip="Edit property"
                 Click="BtnEdit_Click">
                 <Path
-                    Data="M10.36,3.52C10.55,3.33 10.55,3 10.36,2.82L9.19,1.65C9,1.45 8.68,1.45 8.48,1.65L7.56,2.56L9.44,4.44M1.5,8.63V10.5H3.38L8.91,4.97L7.03,3.09L1.5,8.63Z"
-                    Stroke="DodgerBlue" />
+                    Data="M14.5,4.93C14.77,4.66 14.77,4.2 14.5,3.94L12.86,2.3C12.6,2.03 12.15,2.03 11.87,2.3L10.58,3.58L13.21,6.21M2.1,12.08V14.7H4.73L12.47,6.95L9.84,4.33L2.1,12.08Z"
+                    Fill="Black" />
+            </Button>
+            <Button
+                Margin="0, 0, 5, 0"
+                Style="{DynamicResource OptionButton}"
+                ToolTip="Copy property"
+                Click="BtnCopy_OnClick">
+                <Path
+                    Data="M9.5,10.5H4V3.5H9.5M9.5,2.5H4A1,1 0 0,0 3,3.5V10.5A1,1 0 0,0 4,11.5H9.5A1,1 0 0,0 10.5,10.5V3.5A1,1 0 0,0 9.5,2.5M8,1H2A1,1 0 0,0 1,1.5V8.5H2V1.5H8V1Z"
+                    Fill="Black" />
             </Button>
             <Button
                 Style="{DynamicResource OptionButton}"
                 ToolTip="Remove property"
                 Click="BtnDelete_Click">
                 <Path
-                    Data="M9.5,3.21L8.8,2.5L6,5.3L3.21,2.5L2.5,3.21L5.3,6L2.5,8.8L3.21,9.5L6,6.71L8.8,9.5L9.5,8.8L6.71,6L9.5,3.21Z"
+                    Data="M9.42,8.4L13.3,12.28V13.3H12.28L8.4,9.42L4.52,13.3H3.5V12.28L7.38,8.4L3.5,4.52V3.5H4.52L8.4,7.38L12.28,3.5H13.3V4.52L9.42,8.4Z"
                     Margin="-1, -1, 0, 0"
-                    Stroke="OrangeRed"/>
+                    Fill="Black"/>
             </Button>
         </StackPanel>
     </Grid>

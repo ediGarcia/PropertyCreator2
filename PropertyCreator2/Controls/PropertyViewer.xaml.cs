@@ -14,6 +14,11 @@ public partial class PropertyViewer
     #region Custom Events
 
     /// <summary>
+    /// Notifies whenever the "Copy" button is clicked.
+    /// </summary>
+    public event EventHandler<PropertyViewerEventArgs> CopyButtonClicked;
+
+    /// <summary>
     /// Notifies whenever the "Edit" button is clicked.
     /// </summary>
     public event EventHandler<PropertyViewerEventArgs> EditButtonClicked;
@@ -72,6 +77,16 @@ public partial class PropertyViewer
         InitializeComponent();
 
     #region Events
+
+    #region BtnCopy_OnClick
+    /// <summary>
+    /// Notifies that the "Copy" button has been clicked.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void BtnCopy_OnClick(object sender, RoutedEventArgs e) =>
+        CopyButtonClicked?.Invoke(this, new(PropertyData));
+    #endregion
 
     #region BtnDelete_Click
     /// <summary>

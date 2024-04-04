@@ -63,7 +63,8 @@
                 <ComboBox
                     x:Name="CmbType"
                     IsEditable="True"
-                    Text="{Binding Type}"/>
+                    IsTextSearchCaseSensitive="True"
+                    Text="{Binding Type}" />
             </StackPanel>
 
             <StackPanel

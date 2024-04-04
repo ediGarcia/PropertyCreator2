@@ -38,7 +38,7 @@ public partial class MainWindow
 
         try
         {
-            Settings = SystemMethods.RetrieveDataFromFile<Settings>(DataFile);
+            Settings = FileMethods.RetrieveDataFromFile<Settings>(DataFile);
         }
         catch
         {
@@ -56,12 +56,9 @@ public partial class MainWindow
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void BtnAddDependencyProperty_OnClick(object sender, RoutedEventArgs e)
-    {
-        _propertyDataEditor.PropertyData = new DependencyPropertyData { OwnerType = Settings.LastUsedOwnerType };
-        PopPopup.Title = "Add Dependency Property";
-        PopPopup.IsOpen = true;
-    }
+    private void BtnAddDependencyProperty_OnClick(object sender, RoutedEventArgs e) =>
+        OpenPropertyEditorPopup(new DependencyPropertyData { OwnerType = Settings.LastUsedOwnerType }, true);
+
     #endregion
 
     #region BtnAddProperty_OnClick
@@ -70,17 +67,14 @@ public partial class MainWindow
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void BtnAddProperty_OnClick(object sender, RoutedEventArgs e)
-    {
-        _propertyDataEditor.PropertyData = new SimplePropertyData();
-        PopPopup.Title = "Add Property";
-        PopPopup.IsOpen = true;
-    }
+    private void BtnAddProperty_OnClick(object sender, RoutedEventArgs e) =>
+        OpenPropertyEditorPopup(new SimplePropertyData(), true);
+
     #endregion
 
     #region BtnGenerate_OnClick
     /// <summary>
-    /// Generates the properties declaration.
+    /// Generates the properties' declaration.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -113,7 +107,7 @@ public partial class MainWindow
         Settings.Properties.Remove(_selectedPropertyData);
         _selectedPropertyData = null;
 
-        SystemMethods.SaveDataToFile(DataFile, Settings);
+        FileMethods.SaveDataToFile(DataFile, Settings);
     }
     #endregion
 
@@ -126,7 +120,7 @@ public partial class MainWindow
     private void PopDeleteAll_OnPopupConfirmed(object? sender, PopupButtonEventArgs e)
     {
         Settings.Properties.Clear();
-        SystemMethods.SaveDataToFile(DataFile, Settings);
+        FileMethods.SaveDataToFile(DataFile, Settings);
     }
     #endregion
 
@@ -168,8 +162,23 @@ public partial class MainWindow
                 Settings.LastUsedOwnerType = dependencyPropertyData.OwnerType;
 
             SortProperties();
-            SystemMethods.SaveDataToFile(DataFile, Settings);
+            FileMethods.SaveDataToFile(DataFile, Settings);
         }
+    }
+    #endregion
+
+    #region PropertyViewer_OnCopyButtonClicked
+    /// <summary>
+    /// Clones the current property and opens the edit popup for the new item.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void PropertyViewer_OnCopyButtonClicked(object? sender, PropertyViewerEventArgs e)
+    {
+        PropertyData propertyData = e.CurrentPropertyData.Clone();
+        propertyData.Name += "_2";
+
+        OpenPropertyEditorPopup(propertyData, true);
     }
     #endregion
 
@@ -195,19 +204,13 @@ public partial class MainWindow
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void PropertyViewer_OnEditButtonClicked(object? sender, PropertyViewerEventArgs e)
-    {
-        _selectedPropertyData = e.CurrentPropertyData;
-        _propertyDataEditor.PropertyData = _selectedPropertyData.Clone();
-
-        PopPopup.Title = $"Edit {(_selectedPropertyData is DependencyPropertyData ? "Dependency Property" : "Property")}";
-        PopPopup.IsOpen = true;
-    }
+    private void PropertyViewer_OnEditButtonClicked(object? sender, PropertyViewerEventArgs e) =>
+        OpenPropertyEditorPopup(e.CurrentPropertyData, false);
     #endregion
 
     #region BtnRemoveAll_OnClick
     /// <summary>
-    /// Shows the delete all popup.
+    /// Shows the "Delete all" popup.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -218,6 +221,31 @@ public partial class MainWindow
     #endregion
 
     #region Private Methods
+
+    #region OpenPropertyEditorPopup
+    /// <summary>
+    /// Opens the editor popup.
+    /// </summary>
+    /// <param name="propertyData"></param>
+    /// <param name="isNewProperty"></param>
+    private void OpenPropertyEditorPopup(PropertyData propertyData, bool isNewProperty)
+    {
+        string verb = "Add";
+
+        if (!isNewProperty)
+        {
+            _selectedPropertyData = propertyData;
+            propertyData = propertyData.Clone();
+
+            verb = "Edit";
+        }
+
+        _propertyDataEditor.PropertyData = propertyData;
+        PopPopup.Title =
+            $"{verb} {(propertyData is DependencyPropertyData ? "Dependency Property" : "Property")}";
+        PopPopup.IsOpen = true;
+    }
+    #endregion
 
     #region SortProperties
     /// <summary>

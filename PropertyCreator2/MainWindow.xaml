@@ -43,6 +43,7 @@
                         HorizontalAlignment="Stretch"
                         MouseOverBrush="#00FAFAFA"
                         PropertyData="{Binding }"
+                        CopyButtonClicked="PropertyViewer_OnCopyButtonClicked"
                         DeleteButtonClicked="PropertyViewer_OnRemoveButtonClicked"
                         EditButtonClicked="PropertyViewer_OnEditButtonClicked" />
                 </DataTemplate>
