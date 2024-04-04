@@ -43,10 +43,10 @@ public static class PropertyGeneratorService
         if (dependencyPropertiesText.Length > 0)
             finalText.Append(dependencyPropertiesText);
 
-        finalText.AppendLines("#endregion", "");
+        finalText.AppendLine("#endregion");
 
         if (privateVariablesText.Length > 0)
-            finalText.Append(privateVariablesText);
+            finalText.AppendLine().Append(privateVariablesText);
 
         return finalText.ToString();
     }
@@ -120,23 +120,16 @@ public static class PropertyGeneratorService
         AppendSummary(sb, dependencyPropertyData.Description);
         AppendCategory(sb, dependencyPropertyData.Category);
 
-        if (!dependencyPropertyData.DefaultValue.IsNullOrWhiteSpace())
-        {
-            sb.Append("[DefaultValue(");
+        if (IsBasicType(dependencyPropertyData.Type))
+            sb.AppendLine("[DefaultValue(", GetDefaultValueText(dependencyPropertyData), ")]");
 
-            if (IsBasicType(dependencyPropertyData.Type)
-                && !dependencyPropertyData.Type.EqualsAny(
-                    StringComparison.Ordinal,
-                    "nint", "IntPtr",
-                    "unint", "UIntPtr"))
-                sb.Append(GetDefaultValueText(dependencyPropertyData));
-
-            else
-                sb.Append("typeof(", dependencyPropertyData.AttributeDefaultValueType, "), \"",
-                    dependencyPropertyData.AttributeDefaultValue, "\"");
-
-            sb.AppendLine(")]");
-        }
+        else if (!dependencyPropertyData.DefaultValue.IsNullOrWhiteSpace())
+            sb.AppendLine(
+                "[DefaultValue(typeof(",
+                dependencyPropertyData.AttributeDefaultValueType,
+                "), \"",
+                dependencyPropertyData.AttributeDefaultValue,
+                "\")]");
 
         AppendDescription(sb, dependencyPropertyData.Description, dependencyPropertyData.UseDescriptionAttribute);
 
@@ -144,7 +137,7 @@ public static class PropertyGeneratorService
 
         if (IsHidingUserControlMember(dependencyPropertyData.Name))
             sb.Append("new ");
-            
+
         sb.Append(dependencyPropertyData.Type, " ", dependencyPropertyData.Name);
 
         if (dependencyPropertyData.GetStatus != PropertyMethodStatus.None
@@ -233,7 +226,7 @@ public static class PropertyGeneratorService
 
     #region GenerateSimpleProperty
     /// <summary>
-    /// Generates a simple Property declaration according to the specified &lt;see cref="DependencyPropertyData"/&gt;.
+    /// Generates a simple Property declaration according to the specified <see cref="DependencyPropertyData"/>;.
     /// </summary>
     /// <param name="simplePropertyData"></param>
     /// <returns></returns>
@@ -268,7 +261,7 @@ public static class PropertyGeneratorService
                     if (simplePropertyData.NotifyChanges)
                         sb.AppendLines("", "\t{")
                             .AppendLine("\t\t", privateVariableName, " = value;")
-                            .AppendLine("\t\tPropertyChanged?.Invoke(this, nameof(", simplePropertyData.Name, "));")
+                            .AppendLine("\t\tPropertyChanged?.Invoke(this, new(nameof(", simplePropertyData.Name, ")));")
                             .AppendLine("\t}");
                     else
                         sb.AppendLine(" => ", privateVariableName, " = value;");
@@ -389,14 +382,12 @@ public static class PropertyGeneratorService
             "float", "Single",
             "int", "Int32",
             "long", "Int64",
-            "nint", "IntPtr",
             "object", "Object",
             "sbyte", "SByte",
             "short", "Int16",
             "string", "String",
             "uint", "UInt32",
             "ulong", "UInt64",
-            "unint", "UIntPtr",
             "ushort", "UInt16");
     #endregion
 
